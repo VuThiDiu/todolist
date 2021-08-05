@@ -4,9 +4,10 @@ package com.example.demo.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Data
-@Table(name = "todoDetail")
+@Table(name = "tododetail")
 @Entity
 public class TodoDetail {
     @Id
@@ -14,8 +15,10 @@ public class TodoDetail {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "todolist_id")
-    private  TodoList todoList;
+    @JoinColumn(name = "userid")
+    private User user;
 
     private  String content;
+    private Date  timecreated;
+    private String level;
 }

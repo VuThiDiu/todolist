@@ -17,6 +17,8 @@ public class CustomUserDetails implements UserDetails {
 
     User user;
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // default all ROLE_USER
@@ -30,12 +32,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUserName();
+        return user.getUsername();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

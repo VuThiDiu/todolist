@@ -14,11 +14,11 @@ public class User {
     @GeneratedValue
     private long id;
     @Column(nullable = false, unique = true)
-    private String userName;
+    private String username;
 
 
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<TodoList> todoList;
+    private List<TodoList> todolist;
 }

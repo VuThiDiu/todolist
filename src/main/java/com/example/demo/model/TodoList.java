@@ -9,21 +9,21 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "todoList")
+@Table(name = "todolist")
 public class TodoList {
     @Id
     @GeneratedValue
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userid")
     private User user;
 
-    private Date timeTodo;
+    private Date timetodo;
 
 
-    @OneToMany(mappedBy = "todoList", cascade = CascadeType.ALL)
-    private List<TodoDetail>  todoDetails;
+    @OneToMany(mappedBy = "todolist", cascade = CascadeType.ALL)
+    private List<TodoDetail>  tododetails;
 
 
 

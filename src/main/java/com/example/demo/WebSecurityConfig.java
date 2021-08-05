@@ -4,7 +4,9 @@ package com.example.demo;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 // cau hinh va phan quyen
 @EnableWebSecurity
+@Configuration
 public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
     @Autowired
     UserService userService;
@@ -36,11 +39,18 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
         // Spring Security dung de ma hoa mat khau nguoi dung
         return new BCryptPasswordEncoder();
     }
-
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+        auth.setUserDetailsService(userService);
+        auth.setPasswordEncoder(passwordEncoder());
+        return auth;
+    }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
             auth.userDetailsService(userService) // cung cap userservice cho spring security
                     .passwordEncoder(passwordEncoder()); // cung cap pass cho encoder
+        //auth.authenticationProvider(authenticationProvider());
     }
 
 
@@ -50,10 +60,15 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
                 .cors() // ngan chan request  tu mot domain khac
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll() // cho phep tat ca moi nguoi co the truy cap cai nay nay
-                .anyRequest().authenticated(); // con lai la phai authen
-        // them mot lop Filter kiem tra jwt
+                .antMatchers("/authen" ,"/login", "/register" , "/" ).permitAll()
+                // cho phep tat ca moi nguoi co the truy cap cai nay nay
+                .anyRequest().authenticated()
+                .and().formLogin().loginPage("/login").loginProcessingUrl("/authen").defaultSuccessUrl("/home", true)
+                .and().rememberMe().key("secretKey").tokenValiditySeconds(60*60*24)
+        .and()
+        .logout().permitAll();; // con lai la phai authen
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.csrf().disable();
     }
 
 

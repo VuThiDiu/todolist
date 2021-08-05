@@ -19,7 +19,7 @@ public class JwtTokenProvider {
     private final String JWT_SECRET =  "todolist";
     // thoi gian co hieu luc cua chuoi jwt // kieu hieu don gian nhu cai web trg minh ay
 
-    private final long JWT_EXPIRATION = 604800000L;
+    private final long JWT_EXPIRATION = 30L * 24L * 60L * 60L * 1000L;
 
     // tao ra jwt tu thong tin cua user
 
@@ -30,7 +30,7 @@ public class JwtTokenProvider {
                 .setSubject(Long.toString(userDetails.getUser().getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.ES512, JWT_SECRET)
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
 

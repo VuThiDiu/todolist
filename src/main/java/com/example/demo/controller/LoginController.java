@@ -5,17 +5,27 @@ import com.example.demo.JwtTokenProvider;
 import com.example.demo.LoginRequest;
 import com.example.demo.LoginResponse;
 import com.example.demo.model.CustomUserDetails;
+import com.example.demo.model.User;
+import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+import javax.validation.Valid;
+import java.util.Optional;
+
+@Controller
 public class LoginController {
 
     @Autowired
@@ -24,28 +34,29 @@ public class LoginController {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
-    @GetMapping("/login")
-    public String login(){
+    @Autowired
+    UserService userService;
+    @GetMapping(value = {"/login", "/" })
+    public String login(Model model){
+        model.addAttribute("user", new User());
         return "login";
     }
-    @PostMapping("/abc")
-    public LoginResponse authenticateUser(@RequestBody LoginRequest loginRequest){
-        // xac thuc usernam va password
-        Authentication authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(
-                  loginRequest.getUserName(),
-                  loginRequest.getPassword()
-          )
-                // Neu khong xay ra exeption thi tuc la thong tin hop le
+    @PostMapping("/authen")
+    public LoginResponse authenticateUser(Model model, @Valid @ModelAttribute("user") User user){
 
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        // tra ve jwt cho nguoi dung
-        String jwt = jwtTokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-        return new LoginResponse(jwt);
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            user.getUsername(),
+                            user.getPassword()
+                    )
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // tra ve jwt cho nguoi dung
+            String jwt = jwtTokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
+            LoginResponse loginResponse  = new LoginResponse(jwt);
+            return new LoginResponse(jwt);
     }
+
 
 
 }
