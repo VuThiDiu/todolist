@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.CustomUserDetails;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -42,5 +43,12 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
 
+    }
+
+    public User getUserById(long id){
+        User existedUser = userRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("not found", "id", id)
+        );
+        return existedUser;
     }
 }

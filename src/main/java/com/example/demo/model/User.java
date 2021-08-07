@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.swing.*;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -21,4 +22,5 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<TodoDetail> todolist;
+
 }

@@ -8,9 +8,11 @@ import lombok.Data;
 public class LoginResponse {
     private String accessToken;
     private String tokenType = "Bearer";
-//    private User user;
-    public LoginResponse(String accessToken) {
+    private long id;
+    private String username;
+    public LoginResponse(String accessToken,long id, String username) {
         this.accessToken = accessToken;
-//        this.user = user;
+        this.username = username;
+        this.id=id;
     }
 }

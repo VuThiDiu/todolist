@@ -26,24 +26,19 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.LongFunction;
 
-@Controller
+@RestController
 public class LoginController {
 
     @Autowired
     AuthenticationManager authenticationManager;
-
-
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     UserService userService;
-    @GetMapping(value = "/login")
-    public String login(Model model){
-        model.addAttribute("user", new User());
-        return "login";
-    }
+
+    // ok nef
     @PostMapping("/login")
-    public LoginResponse authenticateUser(@ModelAttribute("user") User user){
+    public LoginResponse authenticateUser(@RequestBody User user){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),
@@ -54,9 +49,8 @@ public class LoginController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // tra ve jwt cho nguoi dung
         String jwt = jwtTokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-        LoginResponse loginResponse = new LoginResponse(jwt);
-        return loginResponse;
-       // return "redirect:/home";
+        System.out.println(jwt);
+        return new LoginResponse(jwt, user1.getId(), user1.getUsername());
     }
 
 
