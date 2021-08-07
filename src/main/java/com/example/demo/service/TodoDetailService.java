@@ -3,10 +3,11 @@ package com.example.demo.service;
 
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.TodoDetail;
-import com.example.demo.model.TodoList;
 import com.example.demo.repository.TodoDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TodoDetailService {
@@ -33,5 +34,9 @@ public class TodoDetailService {
                 ()-> new ResourceNotFoundException("TodoDetail", "id", id)
         );
         todoDetailRepository.deleteById(id);
+    }
+
+    public List<TodoDetail> getDateTime() {
+        return todoDetailRepository.getDaTeTime();
     }
 }

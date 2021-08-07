@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.function.LongFunction;
 
 @Controller
 public class LoginController {
@@ -36,25 +37,26 @@ public class LoginController {
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     UserService userService;
-    @GetMapping(value = {"/login", "/" })
+    @GetMapping(value = "/login")
     public String login(Model model){
         model.addAttribute("user", new User());
         return "login";
     }
-    @PostMapping("/authen")
-    public LoginResponse authenticateUser(Model model, @Valid @ModelAttribute("user") User user){
-
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            user.getUsername(),
-                            user.getPassword()
-                    )
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            // tra ve jwt cho nguoi dung
-            String jwt = jwtTokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-            LoginResponse loginResponse  = new LoginResponse(jwt);
-            return new LoginResponse(jwt);
+    @PostMapping("/login")
+    public LoginResponse authenticateUser(@ModelAttribute("user") User user){
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getUsername(),
+                        user.getPassword()
+                )
+        );
+        User user1 = (User) userService.getUserByUserName(user.getUsername());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        // tra ve jwt cho nguoi dung
+        String jwt = jwtTokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
+        LoginResponse loginResponse = new LoginResponse(jwt);
+        return loginResponse;
+       // return "redirect:/home";
     }
 
 
