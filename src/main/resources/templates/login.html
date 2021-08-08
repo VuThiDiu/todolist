@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -44,19 +44,19 @@
 <body>
 <div>
     <h2 style="text-align: center; font-size: 40px; font-family: 'Times New Roman', Times, serif;">Login</h2>
-    <form th:action="@{/login}" th:object="${user}" method="POST">
+    <form  method="POST">
         <div class="imgcontainer">
             <img src="https://media.istockphoto.com/photos/check-off-a-todo-list-with-a-black-pen-picture-id1212554542?k=6&m=1212554542&s=612x612&w=0&h=dAEORdxXuwjVzkuSvnqNfZaCD1mNq9dupvQzqyKooh8=" alt="Avatar" class="avatar">
         </div>
         <div class="container">
             <label ><b>UserName</b></label>
-            <input th:field="*{username}" type="text" placeholder="Enter Your Name" id="username" required>
+            <input type="text" placeholder="Enter Your Name" id="username" required>
             <label ><b>PassWord</b></label>
-            <input th:field="*{password}" type="password" placeholder="Enter Your Password" id="password" required>
+            <input  type="password" placeholder="Enter Your Password" id="password" required>
             <button type="submit">Login</button>
         </div>
     </form>
-    <div style="text-align:center; font-size: 18px">Don't have an account yet? <a th:href="@{/register}">Sign Up</a></div>
+    <div style="text-align:center; font-size: 18px">Don't have an account yet? <a href="register.html">Sign Up</a></div>
 </div>
 </div>
 </body>
@@ -71,8 +71,10 @@
                 url: "http://localhost:8080/login",
                 data:{username: username, password: password},
                 success: function(loginResponse){
+                    alert("hahahaha");
                     localStorage.setItem('loginResponse', JSON.stringify(loginResponse));
                 },
+                
                 error: function(e){
                     alert("ERROR : User or password is wrong", );
                     console.log("ERROR", e)

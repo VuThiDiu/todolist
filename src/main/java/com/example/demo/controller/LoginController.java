@@ -9,6 +9,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -23,9 +24,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.awt.*;
 import java.util.Optional;
 import java.util.function.LongFunction;
-
+@CrossOrigin
 @RestController
 public class LoginController {
 
@@ -37,8 +39,10 @@ public class LoginController {
     UserService userService;
 
     // ok nef
-    @PostMapping("/login")
-    public LoginResponse authenticateUser(@RequestBody User user){
+    @PostMapping(value = "/login",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = "application/json")
+    public LoginResponse authenticateUser( User user){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),
