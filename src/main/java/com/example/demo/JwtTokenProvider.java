@@ -19,7 +19,7 @@ public class JwtTokenProvider {
     private final String JWT_SECRET =  "todolist";
     // thoi gian co hieu luc cua chuoi jwt // kieu hieu don gian nhu cai web trg minh ay
 
-    private final long JWT_EXPIRATION = 30L * 24L * 60L * 60L * 1000L;
+    private final long JWT_EXPIRATION = 60*24*60*7L;
 
     // tao ra jwt tu thong tin cua user
 

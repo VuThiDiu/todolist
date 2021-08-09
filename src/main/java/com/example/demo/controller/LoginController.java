@@ -27,7 +27,7 @@ import javax.validation.Valid;
 import java.awt.*;
 import java.util.Optional;
 import java.util.function.LongFunction;
-@CrossOrigin
+
 @RestController
 public class LoginController {
 
@@ -39,10 +39,10 @@ public class LoginController {
     UserService userService;
 
     // ok nef
-    @PostMapping(value = "/login",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = "application/json")
+    @PostMapping(value = "/login")
     public LoginResponse authenticateUser( User user){
+        System.out.println("login nef ");
+        System.out.println(user.getUsername());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),

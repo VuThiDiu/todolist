@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style type="text/css" media="all">
+        .header{
+            background-color: #9da7c2;
+            padding: 30px 40px;
+            color: white;
+            text-align: center;
+        }
+        .header::after{
+            content: "";
+            display: table;
+            clear: both;
+        }
+        h2{
+            font-size: 40px;
+        }
+    
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+        ul li{
+            cursor: pointer;
+            position: relative;
+            padding: 12px 8px 12px 40px;
+            list-style-type: none;
+            background-color: #eee;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+        ul li:nth-child(odd){
+            background-color: #f9f9f9;
+        }
+        ul li:hover {
+            background-color: #ddd;
+        }
+        ul li.checked::before {
+            content: '';
+            position: absolute;
+            border-color: #fff;
+            border-style: solid;
+            border-width: 0 2px 2px 0;
+            top: 10px;
+            left: 16px;
+            transform: rotate(45deg);
+            height: 15px;
+            width: 7px;
+            }
+        .addBtn:hover{
+                background-color: #bbb;
+            }  
+        input {
+            margin: 0;
+            border: none;
+            border-radius: 0;
+            width: 25%;
+            padding: 10px;
+            float: left;
+            font-size: 16px;
+            height: 20px;
+
+        }
+
+        .addBtn {
+        padding: 10px;
+        width: 5%;
+        background: #d9d9d9;
+        color: #555;
+        float: left;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-radius: 0;
+        height: 20px;
+        }
+        .close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 12px 16px 12px 16px;
+        }
+
+        .close:hover {
+        background-color: #f44336;
+        color: white;
+        }
+        .float{
+            position:fixed;
+            width:60px;
+            height:60px;
+            bottom:40px;
+            right:40px;
+            background-color:#9da7c2;
+            color:#FFF;
+            border-radius:50px;
+            text-align:center;
+            box-shadow: 2px 2px 3px #999;
+            font-size:50px;
+            outline : none
+        }
+
+        .my-float{
+            margin-top:22px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+                <div class="header">
+                    <span style="display: inline-flex;">
+                    <h2>My Todo List</h2>
+                    <button id = "logout" style="width:80px; height : 28px; position: absolute; right: 38px">Logout</button>
+                    </span>
+                    
+                <div style="position: relative;left: 486px;">
+<!--                    <form th:action="@{/search}" method="GET">-->
+<!--                        <input type="text" placeholder="Search">-->
+<!--                        <button class="addBtn" type="submit">Search</button>-->
+<!--                    </form>-->
+                </div>
+                </div>
+<!--                <ul id="todolist" th:each="todo : ${todolist}">-->
+<!--                    <li th:text="${todo.time}"></li>-->
+
+<!--                </ul>-->
+
+                <a class="float">
+                    <i class="fa fa-plus my-float">+</i>
+                </a>
+</body>
+<script>
+    var myNodelist = document.getElementsByTagName("LI");
+        var i;
+        for (i = 0; i < myNodelist.length; i++) {
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode("\u00D7");
+        span.className = "close";
+        span.appendChild(txt);
+        myNodelist[i].appendChild(span);
+        }
+        $(document).ready(function(){
+            $(function loadData(){
+                console.log(window.localStorage.getItem('loginResponse'));
+                if(window.localStorage.getItem('loginResponse')!=null){ // check loginResponse is cached in local Storage before
+                    var loginResponse = JSON.parse(localStorage.getItem("loginResponse"));
+                    $.ajax({
+                        type:"GET",
+                        url: `http://localhost:8080/account/${loginResponse.id}`,
+                        headers: {
+                            Authorization: `Bearer ${loginResponse.accessToken}`,
+                            credential: "include",
+                            "Content-Type": "application/json"
+                        },
+                        success: function(data){
+                            console.log(response)
+                        },
+                        dataType:"text",
+                        error: function(response){
+                            // console.log((jQuery.parseJSON(response.responseText.split("}")[0]+"}"))) ;
+                            console.log(response.responseText)
+                        },
+                    })
+                }
+                else{
+                    console.log("chua dang nhap  ne ba noi");
+                }
+            })
+                $("a").click(function(){
+                    window.location.replace("addTodoList.html")
+                })
+        
+
+
+                $("#logout").click(function(){
+                    localStorage.clear();
+                    window.location.replace("login.html");
+                })
+        
+            })
+</script>
+</html>

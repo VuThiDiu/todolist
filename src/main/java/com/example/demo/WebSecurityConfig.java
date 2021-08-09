@@ -63,10 +63,11 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login", "/register").permitAll()
                 // cho phep tat ca moi nguoi co the truy cap cai nay nay
                 .anyRequest().authenticated()
+                .and().formLogin().defaultSuccessUrl("/home", true)
                // .and().formLogin().loginPage("/login").loginProcessingUrl("/authen").defaultSuccessUrl("/home", true)
                 //.and().formLogin().loginPage("/login").loginProcessingUrl("/login")
 //                .and().formLogin().defaultSuccessUrl("/home", true)
-                .and().rememberMe().key("secretKey").tokenValiditySeconds(60*60*24)
+//                .and().rememberMe().key("secretKey").tokenValiditySeconds(60*60*24)
         .and()
         .logout().permitAll();; // con lai la phai authen
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
