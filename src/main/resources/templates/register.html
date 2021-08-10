@@ -92,7 +92,7 @@
             var username = $("#user").val();
             var password = $("#pass").val();
             $.ajax({
-                type:"GET",
+                type:"POST",
                 url: "http://localhost:8080/register",
                 data:{"username": `${username}`, "password": `${password}`},
                 success: function(){

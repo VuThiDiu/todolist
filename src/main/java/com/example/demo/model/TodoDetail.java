@@ -19,6 +19,5 @@ public class TodoDetail {
     private User user;
 
     private  String content;
-    private Date  timecreated;
     private String level;
 }

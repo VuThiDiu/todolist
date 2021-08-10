@@ -84,7 +84,10 @@
         top: 0;
         padding: 12px 16px 12px 16px;
         }
-
+        .level{
+            font-size: 10px;
+            margin-right: 20px;
+        }
         .close:hover {
         background-color: #f44336;
         color: white;
@@ -124,6 +127,9 @@
 <!--                    </form>-->
                 </div>
                 </div>
+                <ul id="todoList">
+                    
+                </ul>
 <!--                <ul id="todolist" th:each="todo : ${todolist}">-->
 <!--                    <li th:text="${todo.time}"></li>-->
 
@@ -134,53 +140,60 @@
                 </a>
 </body>
 <script>
-    var myNodelist = document.getElementsByTagName("LI");
-        var i;
-        for (i = 0; i < myNodelist.length; i++) {
-        var span = document.createElement("SPAN");
-        var txt = document.createTextNode("\u00D7");
-        span.className = "close";
-        span.appendChild(txt);
-        myNodelist[i].appendChild(span);
-        }
         $(document).ready(function(){
             $(function loadData(){
-                console.log(window.localStorage.getItem('loginResponse'));
                 if(window.localStorage.getItem('loginResponse')!=null){ // check loginResponse is cached in local Storage before
                     var loginResponse = JSON.parse(localStorage.getItem("loginResponse"));
                     $.ajax({
                         type:"GET",
-                        url: `http://localhost:8080/account/${loginResponse.id}`,
+                        url: "http://localhost:8080/account/"+loginResponse.id,
                         headers: {
-                            Authorization: `Bearer ${loginResponse.accessToken}`,
-                            credential: "include",
-                            "Content-Type": "application/json"
+                            "Authorization": `Bearer ${loginResponse.accessToken}`,
+                           
                         },
                         success: function(data){
                             console.log(response)
                         },
-                        dataType:"text",
+                        dataType:"json",
                         error: function(response){
-                            // console.log((jQuery.parseJSON(response.responseText.split("}")[0]+"}"))) ;
-                            console.log(response.responseText)
+                           var data = $.parseJSON(response.responseText.split("]}")[0]+"]}").todoDTO ;
+                           var todoList = document.getElementById("todoList");
+                           for(var i =  0; i< data.length;i++){
+                            var li = document.createElement("li");
+                            var span =  document.createElement("circle");
+                            var level = document.createTextNode (data[i].level);
+                            span.className="level";
+                            span.appendChild(level);
+                            li.appendChild(span);
+                            var text =  document.createTextNode(data[i].content);
+                            li.className = "date";
+                            li.appendChild(text);
+                            var span = document.createElement("SPAN");
+                            var txt = document.createTextNode("\u00D7");
+                            span.className = "close";
+                            span.appendChild(txt);
+                            li.appendChild(span);
+                            todoList.appendChild(li);
+                            
+                            }
                         },
                     })
                 }
                 else{
                     console.log("chua dang nhap  ne ba noi");
                 }
-            })
+            });
+                        
                 $("a").click(function(){
                     window.location.replace("addTodoList.html")
                 })
-        
-
-
+                
                 $("#logout").click(function(){
                     localStorage.clear();
                     window.location.replace("login.html");
                 })
-        
+                
             })
+            
 </script>
 </html>

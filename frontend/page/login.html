@@ -71,6 +71,7 @@
                 headers: {
                 },
                 data:{"username": username, "password": password},
+                dataType: "json", 
                 success: function(data){
                     alert("Login");
                     localStorage.setItem('loginResponse', JSON.stringify(data));
