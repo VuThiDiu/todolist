@@ -56,7 +56,7 @@
             <button  value="login">Login</button>
         </div>
     </div>
-    <div style="text-align:center; font-size: 18px">Don't have an account yet? <a href="register.html">Sign Up</a></div>
+    <div style="text-align:center; font-size: 18px">Don't have an account yet? <a href="/register">Sign Up</a></div>
 </div>
 </div>
 </body>
@@ -71,17 +71,20 @@
                 data:{"username": username, "password": password},
                 dataType:"application/json"
             })
-            .done(function(response){
-               localStorage.setItem("loginResponse", response.responseText);
-                window.location.replace("/home")
-            })
+            // .done(function(response){
+            //    localStorage.setItem("loginResponse", response.responseText);
+            //     window.location.replace("/home")
+            // })
             .fail(function(response){
-                localStorage.setItem("loginResponse",response.responseText );
+                if(response.status==200){
+                    localStorage.setItem("loginResponse",response.responseText );
                 window.location.replace("/home")
-            })
-            .always(function(){
-                alert("completed!")
-            })
+                }else{
+                    window.location.reload();
+                }
+                
+            });
+            
         });
     });
     

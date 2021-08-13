@@ -8,15 +8,19 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-@CrossOrigin
-@RestController
+
+@Controller
 public class RegisterController {
 
     @Autowired
     UserService userService;
-
+    @GetMapping("/register")
+    public String getRegisterPage(){
+        return "register";
+    }
     // oke
-    @PostMapping(value = "/register")
+    @ResponseBody
+    @PostMapping(value = "/register", produces = "application/json")
     public User Register( User user){
         String userName = user.getUsername();
         System.out.println(userName + "register");
@@ -24,6 +28,7 @@ public class RegisterController {
         if(userName!=null && userName.length()>0){
             userService.createNewUser(user);
         }
+        System.out.println(user);
         return user;
     }
 }
