@@ -22,26 +22,29 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.awt.*;
 import java.util.Optional;
 import java.util.function.LongFunction;
-@CrossOrigin
-@RestController
+@Controller
 public class LoginController {
-
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     UserService userService;
-
+    @GetMapping(value = {"/login", "/", ""})
+    public String getLoginForm(){
+        return "login";
+    }
     // ok nef
-    @PostMapping(value = "/login")
-    public LoginResponse authenticateUser( User user){
-        System.out.println(user.getUsername());
+
+    @ResponseBody
+    @PostMapping(value = "/authen", produces = "application/json")
+    public LoginResponse authentication(User user){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),
@@ -52,10 +55,8 @@ public class LoginController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // tra ve jwt cho nguoi dung
         String jwt = jwtTokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-        System.out.println(jwt);
-        return new LoginResponse(jwt, user1.getId(), user1.getUsername());
+        return new LoginResponse(jwt,  user1.getId(),user1.getUsername());
     }
 
-
-
 }
+

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html >
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
     <style>
-        form{
+        .container{
             border: 3px solid #f1f1f1;
             width: fit-content;
             margin: auto;
@@ -44,18 +44,18 @@
 <body>
 <div>
     <h2 style="text-align: center; font-size: 40px; font-family: 'Times New Roman', Times, serif;">Login</h2>
-    <form  method="POST">
+    <div class="container">
         <div class="imgcontainer">
             <img src="https://media.istockphoto.com/photos/check-off-a-todo-list-with-a-black-pen-picture-id1212554542?k=6&m=1212554542&s=612x612&w=0&h=dAEORdxXuwjVzkuSvnqNfZaCD1mNq9dupvQzqyKooh8=" alt="Avatar" class="avatar">
         </div>
         <div class="container">
             <label ><b>UserName</b></label>
-            <input type="text" placeholder="Enter Your Name" id="username" required>
+            <input  type="text" placeholder="Enter Your Name" id="username" required>
             <label ><b>PassWord</b></label>
             <input  type="password" placeholder="Enter Your Password" id="password" required>
-            <button type="submit">Login</button>
+            <button  value="login">Login</button>
         </div>
-    </form>
+    </div>
     <div style="text-align:center; font-size: 18px">Don't have an account yet? <a href="register.html">Sign Up</a></div>
 </div>
 </div>
@@ -66,24 +66,21 @@
             var username = $("#username").val();
             var password = $("#password").val();
             $.ajax({
-                type:"POST",
-                url: "http://localhost:8080/login",
-                headers: {
-                },
+                method:"post",
+                url: "http://localhost:8080/authen",
                 data:{"username": username, "password": password},
-                success: function(data){
-                    alert("Login");
-                    localStorage.setItem('loginResponse', JSON.stringify(data));
-                    window.location.replace("home.html");
-                },
-                error: function(e){
-                    alert("error");
-                    console.log(e);
-                },
-                complete(response){
-                    alert('done');
-                    console.log(response.responseText)
-                }
+                dataType:"application/json"
+            })
+            .done(function(response){
+               localStorage.setItem("loginResponse", response.responseText);
+                window.location.replace("/home")
+            })
+            .fail(function(response){
+                localStorage.setItem("loginResponse",response.responseText );
+                window.location.replace("/home")
+            })
+            .always(function(){
+                alert("completed!")
             })
         });
     });
