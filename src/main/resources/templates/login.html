@@ -78,7 +78,9 @@
             .fail(function(response){
                 if(response.status==200){
                     localStorage.setItem("loginResponse",response.responseText );
-                window.location.replace("/home")
+                    var res = JSON.parse(response.responseText);
+
+                window.location.replace(`/home/${res.id}`)
                 }else{
                     window.location.reload();
                 }

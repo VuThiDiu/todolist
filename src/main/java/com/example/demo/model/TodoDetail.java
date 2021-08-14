@@ -1,10 +1,13 @@
 package com.example.demo.model;
 
 
+import com.example.demo.model.dto.PlainUserDTO;
+import com.example.demo.model.dto.TodoDetailDTO;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Objects;
 
 @Data
 @Table(name = "tododetail")
@@ -17,7 +20,14 @@ public class TodoDetail {
     @ManyToOne
     @JoinColumn(name = "userid")
     private User user;
-
     private  String content;
-    private String level;
+    private String status;
+    public static TodoDetail from (TodoDetailDTO todoDetailDTO){
+        TodoDetail todoDetail = new TodoDetail();
+        todoDetail.setStatus(todoDetailDTO.getStatus());
+        todoDetail.setContent(todoDetailDTO.getContent());
+
+        return todoDetail;
+
+    }
 }

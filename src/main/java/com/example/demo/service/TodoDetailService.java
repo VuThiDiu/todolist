@@ -25,6 +25,7 @@ public class TodoDetailService {
                 ()-> new ResourceNotFoundException("TodoDetail", "id", id)
         );
         existedTodoDetail.setContent(todoDetail.getContent());
+        existedTodoDetail.setStatus(todoDetail.getStatus());
         todoDetailRepository.save(existedTodoDetail);
         return existedTodoDetail;
     }
@@ -48,4 +49,6 @@ public class TodoDetailService {
         );
         return existedTodoDetail;
     }
+
+
 }

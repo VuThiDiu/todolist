@@ -1,128 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>TodoList</title>
     <style type="text/css" media="all">
-        .header{
-            background-color: #9da7c2;
-            padding: 30px 40px;
-            color: white;
+       .header{
+            padding: 0px 0px;
+            margin: 0px;
+            color: black;
             text-align: center;
-        }
-        .header::after{
-            content: "";
-            display: table;
-            clear: both;
+            height: 100vh;
         }
         h2{
             font-size: 40px;
         }
-    
-        ul {
-            margin: 0;
-            padding: 0;
-        }
-        ul li{
-            cursor: pointer;
-            position: relative;
-            padding: 12px 8px 12px 40px;
-            list-style-type: none;
-            background-color: #eee;
+        #contentText{
             font-size: 18px;
-            transition: 0.2s;
+            font-family: 'Times New Roman', Times, serif;
+            margin-bottom: 20px;
         }
-        ul li:nth-child(odd){
-            background-color: #f9f9f9;
+        .button{
+            color: white;
+            border-radius: 20px;
+            margin-top: 50px;
+            margin-left: 70px;
         }
-        ul li:hover {
-            background-color: #ddd;
+        .id1{
+            width:74px;
+            height:34px;
+            background-color:#6b8eff ;
+            font-size:16px;
         }
-        ul li.checked::before {
-            content: '';
+        .id2{
+            width: 100px;
+            height: 20px;
+            font-size: 18px;
+            padding: 8px 10px;
+            margin: 65px;
+            background-color: #e91b45;
+            outline: none
+        }
+        #status{
             position: absolute;
-            border-color: #fff;
-            border-style: solid;
-            border-width: 0 2px 2px 0;
-            top: 10px;
-            left: 16px;
-            transform: rotate(45deg);
-            height: 15px;
-            width: 7px;
-            }
-            .addBtn:hover{
-                background-color: #bbb;
-            }  
-            textarea {
-            margin: 0;
-            border: none;
-            border-radius: 0;
-            width: 30%;
-            padding: 10px;
-            float: left;
-            font-size: 16px;
-            height: 50px;
-
-            }
-
-.addBtn {
-  padding: 10px;
-  width: 5%;
-  background: rgb(57, 177, 224);
-  color: white;
-  float: left;
-  text-align: center;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-  border-radius: 0;
-  height: 20px;
-  border-radius: 50px;
-  position: relative;
-  top: 15px;
-}
-.close {
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 12px 16px 12px 16px;
-}
-
-.close:hover {
-  background-color: #f44336;
-  color: white;
-}
-
+            top: 316px;
+            right: 710px;
+        }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-                <!-- Home sẽ hiển thị các list của người dùng này  -->
-                <div class="header">
-                    <h2>1/1/2021</h2>
-                <div style="position: relative;left: 486px;">
-                    <textarea name="content" id="contentText" cols="50" rows="10" placeholder="Plan what you want to do in here"></textarea>
-                        <span class="addBtn">Add</span>
-                </div>
-                        
-                    
-                </div>
-                <ul id="todolist">
-                    <li>Learn  English</li>
-                    <li>Learn  English</li>
-                    <li>Learn  English</li>
-                    <li>Learn  English</li>
-                    <li>Learn  English</li>
-                </ul>
+<div  class="header" >
+    <h2 style="background-color: #9da7c2;margin:0px 0px 20px; padding:  30px 40px; ">Edit TodoList</h2>
+    <div class="todoDetail" th:id="${todoDetail.id}">
+        <div>
+            <textarea rows="10" cols="50" id="content" style="margin-bottom:10px" type="text"  th:value="${todoDetail.content}" required></textarea>
+            <select name="level" id="status" >
+                <option value="done">Done</option>
+                <option value="pending" >Pending</option>
+                <option value="processing" >Processing</option>
+                <option value="cancel" >Cancel</option>
+            </select>
+        </div>
+        <div >
+            <button class="button id1" >Update</button>
+            <a class="button id2" >Cancel</a>
+        </div>
+    </div>
+
+</div>
 </body>
 <script>
-    var myNodelist = document.getElementsByTagName("LI");
-        var i;
-        for (i = 0; i < myNodelist.length; i++) {
-        var span = document.createElement("SPAN");
-        var txt = document.createTextNode("\u00D7");
-        span.className = "close";
-        span.appendChild(txt);
-        myNodelist[i].appendChild(span);
-        }
+    $(document).ready(function(){
+            $(function loadData(){
+                if(window.localStorage.getItem('loginResponse')!=null){
+                    var loginResponse = JSON.parse(localStorage.getItem("loginResponse"));
+                    $(".id1").click(function(){
+                        var content = $("#content").val();
+                        var text = $("#status").val();
+                        status = text[0].toUpperCase()+ text.substring(1);
+                        var id = $(".todoDetail").attr('id');
+                        console.log(id)
+                        var data={
+                                            "content": content,
+                                            "status" : status,
+                                            "user.id": loginResponse.id,
+                                            "user.username" : loginResponse.username
+                                        };
+                                        console.log(data)
+                                    $.ajax({
+                                        method: "put",
+                                        url: "http://localhost:8080/todolist/"+id,
+                                        headers:{
+                                            "Authorization": `Bearer ${loginResponse.accessToken}`,
+                                        },
+                                        dataType:"application/json",
+                                        data: data 
+                                    }).fail(function(data){
+                                        if(data.status==200){
+                                            alert("Update")
+                                        }
+                                    })
+                                })
+
+                    $("a").click(function(){
+                        window.location.replace("/home/"+loginResponse.id);
+                        
+                    })
+                }else{
+                    alert("Login plz!");
+                    window.location.replace("/login");
+                }
+            })
+
+            
+            
+        })
 </script>
 </html>
